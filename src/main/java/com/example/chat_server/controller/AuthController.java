@@ -1,5 +1,8 @@
 package com.example.chat_server.controller;
 
+import com.example.chat_server.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,10 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
-import com.example.chat_server.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -19,22 +19,24 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthenticationManager authManager;
-    private final UserService userService; // 🔽 추가
+    private final UserService userService;
 
     public AuthController(AuthenticationManager authManager, UserService userService) {
         this.authManager = authManager;
         this.userService = userService;
     }
 
-    // ✅ 회원가입 (username, password 받음)
+    // ✅ 회원가입 (memberId, deptId, username, password 받음)
     @PostMapping("/auth/register")
     public Map<String, Object> register(@RequestBody RegisterRequest req) {
-        if (req.username() == null || req.username().isBlank() ||
+        if (req.memberId() == null || req.deptId() == null ||
+                req.username() == null || req.username().isBlank() ||
                 req.password() == null || req.password().isBlank()) {
-            return Map.of("ok", false, "message", "username/password는 필수입니다.");
+            return Map.of("ok", false, "message", "memberId/deptId/username/password는 필수입니다.");
         }
+
         try {
-            userService.register(req.username(), req.password());
+            userService.register(req.memberId(), req.deptId(), req.username(), req.password());
             return Map.of("ok", true);
         } catch (IllegalArgumentException e) {
             return Map.of("ok", false, "message", e.getMessage());
@@ -79,5 +81,5 @@ public class AuthController {
 
     // DTO
     public record LoginRequest(String username, String password) {}
-    public record RegisterRequest(String username, String password) {} // 🔽 추가
+    public record RegisterRequest(Long memberId, Long deptId, String username, String password) {}
 }
