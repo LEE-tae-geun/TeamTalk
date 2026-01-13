@@ -155,3 +155,17 @@ CREATE TABLE colleague (
                            CONSTRAINT fk_colleague_department
                                FOREIGN KEY (dept_id2) REFERENCES department (dept_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE auth_user (
+                           user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                           member_id BIGINT NOT NULL,
+                           dept_id BIGINT NOT NULL,
+                           username VARCHAR(50) NOT NULL UNIQUE,
+                           password_hash VARCHAR(255) NOT NULL,
+                           role VARCHAR(50) NOT NULL,
+
+                           CONSTRAINT fk_auth_user_member
+                               FOREIGN KEY (member_id) REFERENCES member(member_id),
+                           CONSTRAINT fk_auth_user_department
+                               FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
