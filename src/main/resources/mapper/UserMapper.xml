@@ -7,20 +7,22 @@
 
     <resultMap id="UserMap" type="com.example.chat_server.entity.User">
         <id property="id" column="user_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="deptId" column="dept_id"/>
         <result property="username" column="username"/>
         <result property="password" column="password_hash"/>
         <result property="role" column="role"/>
     </resultMap>
 
     <select id="findByUsername" resultMap="UserMap">
-        SELECT user_id, username, password_hash, role
-            FROM auth_user
+        SELECT user_id, member_id, dept_id, username, password_hash, role
+        FROM auth_user
         WHERE username = #{username}
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO auth_user (username, password_hash, role)
-        VALUES (#{username}, #{password}, #{role})
+        INSERT INTO auth_user (member_id, dept_id, username, password_hash, role)
+        VALUES (#{memberId}, #{deptId}, #{username}, #{password}, #{role})
     </insert>
 
 </mapper>
