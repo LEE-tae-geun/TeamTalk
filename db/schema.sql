@@ -167,3 +167,25 @@ CREATE TABLE auth_user (
                            CONSTRAINT fk_auth_user_member
                                FOREIGN KEY (member_id) REFERENCES member (member_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE signup_request (
+                                req_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+                                name VARCHAR(20) NOT NULL,
+                                email VARCHAR(100) NOT NULL,
+                                phone_num VARCHAR(20) NOT NULL,
+
+                                username VARCHAR(50) NOT NULL,
+                                password_hash VARCHAR(255) NOT NULL,
+
+                                status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+                                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+                                assigned_dept_id BIGINT NULL,
+                                reviewed_by BIGINT NULL,
+                                reviewed_at DATETIME NULL,
+                                reject_reason VARCHAR(255) NULL,
+
+                                CONSTRAINT uq_signup_request_username UNIQUE (username),
+                                CONSTRAINT uq_signup_request_email UNIQUE (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
