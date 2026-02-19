@@ -8,13 +8,22 @@ import java.util.List;
 
 @Mapper
 public interface SignupRequestMapper {
-    int insert(SignupRequest req);
+
+    int insert(SignupRequest signupRequest);
+
+    int existsByUsername(@Param("username") String username);
+
+    int existsByEmail(@Param("email") String email);
 
     SignupRequest findById(@Param("reqId") Long reqId);
 
     List<SignupRequest> listByStatus(@Param("status") String status);
 
-    int existsByUsername(@Param("username") String username);
+    int markApproved(@Param("reqId") Long reqId,
+                     @Param("assignedDeptId") Long assignedDeptId,
+                     @Param("reviewedBy") Long reviewedBy);
 
-    int existsByEmail(@Param("email") String email);
+    int markRejected(@Param("reqId") Long reqId,
+                     @Param("reviewedBy") Long reviewedBy,
+                     @Param("rejectReason") String rejectReason);
 }

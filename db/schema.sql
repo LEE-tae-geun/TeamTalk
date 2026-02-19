@@ -156,18 +156,21 @@ CREATE TABLE colleague (
                                FOREIGN KEY (dept_id2) REFERENCES department (dept_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 인증(로그인) 전용 테이블
 CREATE TABLE auth_user (
                            user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                           username VARCHAR(50) NOT NULL,
+                           member_id BIGINT NOT NULL,
+                           dept_id BIGINT NOT NULL,
+                           username VARCHAR(50) NOT NULL UNIQUE,
                            password_hash VARCHAR(255) NOT NULL,
-                           role VARCHAR(50) NOT NULL DEFAULT 'ROLE_USER',
-                           member_id BIGINT NULL,
-                           UNIQUE (username),
+                           role VARCHAR(50) NOT NULL,
+
                            CONSTRAINT fk_auth_user_member
-                               FOREIGN KEY (member_id) REFERENCES member (member_id)
+                               FOREIGN KEY (member_id) REFERENCES member(member_id),
+                           CONSTRAINT fk_auth_user_department
+                               FOREIGN KEY (dept_id) REFERENCES department(dept_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 가입요청(승인 전) 테이블
 CREATE TABLE signup_request (
                                 req_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
@@ -187,5 +190,10 @@ CREATE TABLE signup_request (
                                 reject_reason VARCHAR(255) NULL,
 
                                 CONSTRAINT uq_signup_request_username UNIQUE (username),
-                                CONSTRAINT uq_signup_request_email UNIQUE (email)
+                                CONSTRAINT uq_signup_request_email UNIQUE (email),
+
+                                CONSTRAINT fk_signup_request_dept
+                                    FOREIGN KEY (assigned_dept_id) REFERENCES department(dept_id),
+                                CONSTRAINT fk_signup_request_reviewed_by
+                                    FOREIGN KEY (reviewed_by) REFERENCES member(member_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

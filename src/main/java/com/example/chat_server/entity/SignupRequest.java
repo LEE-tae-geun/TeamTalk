@@ -4,14 +4,11 @@ import java.time.LocalDateTime;
 
 public class SignupRequest {
     private Long reqId;
-
     private String name;
     private String email;
     private String phoneNum;
-
     private String username;
     private String passwordHash;
-
     private String status;
     private LocalDateTime createdAt;
 

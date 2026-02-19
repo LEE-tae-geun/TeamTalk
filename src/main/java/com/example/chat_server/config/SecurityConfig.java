@@ -21,9 +21,19 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/auth/register").permitAll() // ✅ 추가
+                        // ✅ 회원가입 요청(승인 전 로그인 불가)
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/signup-requests").permitAll()
+
+                        // (기존) 로그인/로그아웃은 그대로 허용
                         .requestMatchers("/api/auth/login", "/api/auth/logout").permitAll()
+
+                        // (기존) /api/auth/register는 남겨두되, 실제 운영은 signup-requests 플로우 권장
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/auth/register").permitAll()
+
+                        // ✅ 관리자 전용
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // 나머지 API는 로그인 필요
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
