@@ -62,4 +62,22 @@
         WHERE email = #{email}
     </select>
 
+    <update id="markApproved">
+        UPDATE signup_request
+        SET status = 'APPROVED',
+            assigned_dept_id = #{assignedDeptId},
+            reviewed_by = #{reviewedBy},
+            reviewed_at = NOW()
+        WHERE req_id = #{reqId}
+    </update>
+
+    <update id="markRejected">
+        UPDATE signup_request
+        SET status = 'REJECTED',
+            reviewed_by = #{reviewedBy},
+            reviewed_at = NOW(),
+            reject_reason = #{rejectReason}
+        WHERE req_id = #{reqId}
+    </update>
+
 </mapper>

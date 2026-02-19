@@ -33,7 +33,8 @@ public class AdminSignupRequestService {
     }
 
     public List<SignupRequest> list(String status) {
-        return signupRequestMapper.listByStatus(status);
+        String s = (status == null || status.isBlank()) ? "PENDING" : status.trim();
+        return signupRequestMapper.listByStatus(s);
     }
 
     @Transactional
